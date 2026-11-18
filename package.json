@@ -1,0 +1,19 @@
+{
+  "name": "ai-tutor",
+  "version": "1.0.0",
+  "description": "This project is part of the Web Development assignment by professor Carlos Ribeiro.",
+  "homepage": "https://github.com/thiagofons/ai-tutor#readme",
+  "bugs": {
+    "url": "https://github.com/thiagofons/ai-tutor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiagofons/ai-tutor.git"
+  },
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "compose:dev": "docker compose -f docker-compose.yaml up -d",
+    "compose:dev:down": "docker compose -f docker-compose.yaml down"
+  }
+}
