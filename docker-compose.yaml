@@ -7,7 +7,15 @@ services:
     depends_on:
       - rabbitmq
     ports:
-      - "8080:8080"
+      - "4000:8080"
+
+  worker:
+    container_name: worker
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
 
   rabbitmq:
     image: rabbitmq:latest
