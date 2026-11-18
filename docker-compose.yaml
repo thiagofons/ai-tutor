@@ -2,20 +2,24 @@ services:
   gateway:
     container_name: gateway
     build:
-      context: ./gateway
+      context: ./apps/gateway
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
     ports:
       - "4000:8080"
+    networks:
+      - net
 
   worker:
     container_name: worker
     build:
-      context: ./worker
+      context: ./apps/worker
       dockerfile: Dockerfile
     depends_on:
       - rabbitmq
+    networks:
+      - net
 
   rabbitmq:
     image: rabbitmq:latest
@@ -24,19 +28,29 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
     configs:
       - source: rabbitmq-plugins
         target: /etc/rabbitmq/enabled_plugins
+    networks:
+      - net
     volumes:
       - rabbitmq-lib:/var/lib/rabbitmq/
       - rabbitmq-log:/var/log/rabbitmq
+      - type: bind
+        source: ./config/rabbitmq/rabbitmq.conf
+        target: /etc/rabbitmq/rabbitmq.conf
+      - type: bind
+        source: ./config/rabbitmq/rabbitmq-defs.json
+        target: /etc/rabbitmq/rabbitmq-defs.json
+      
 
 configs:
   rabbitmq-plugins:
     content: "[rabbitmq_management]."
+
+networks:
+  net:
+    driver: bridge
 
 volumes:
   rabbitmq-lib:
