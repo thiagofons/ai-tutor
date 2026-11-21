@@ -1,4 +1,12 @@
 {
+  "users": [
+    {
+      "name": "admin",
+      "password_hash": "NbpOpSXzsqCJUw+XxPcdHqsvHqPy4LyP0Qm4Kb8hw9pAA2F+",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": ["administrator"]
+    }
+  ],
   "vhosts": [
     {
       "name": "/"

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class OpenAIAdapter implements LLMClientPort {
     @Override
     public LLMResultDto analyze(InputQueryDto query) {
+        // TODO: Implement OpenAI call
         return null;
     }
 }
