@@ -1,38 +1,53 @@
 {
-  "users": [
-    {
-      "name": "admin",
-      "password": "admin",
-      "tags": "administrator"
-    }
-  ],
   "vhosts": [
     {
       "name": "/"
     }
   ],
-  "permissions": [
+  "exchanges": [
     {
-      "user": "admin",
+      "name": "ai.output.exchange",
       "vhost": "/",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
     }
   ],
   "queues": [
     {
-      "name": "queries",
+      "name": "ai.itens.input",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-dead-letter-exchange": "",
+        "x-dead-letter-routing-key": "ai.itens.input.dlq"
+      }
+    },
+    {
+      "name": "ai.itens.input.dlq",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
       "arguments": {}
     },
     {
-      "name": "responses",
+      "name": "ai.itens.output",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "ai.output.exchange",
+      "vhost": "/",
+      "destination": "ai.itens.output",
+      "destination_type": "queue",
+      "routing_key": "ai.output.processed",
       "arguments": {}
     }
   ]
