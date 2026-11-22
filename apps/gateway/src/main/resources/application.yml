@@ -1,0 +1,36 @@
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+        prefetch: 1
+        concurrency: 5
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          initial-interval: 2000ms
+          multiplier: 2.0
+          max-attempts: 3
+
+  ai:
+    openai:
+      llm:
+        api-key: ${OPENAI_API_KEY}
+
+app:
+  rabbitmq:
+    queues:
+      input: ai.itens.input
+      dlq: ai.itens.input.dlq
+      output: ai.itens.output
+    exchanges:
+      output: ai.output.exchange
+    routing-keys:
+      output: ai.output.processed
