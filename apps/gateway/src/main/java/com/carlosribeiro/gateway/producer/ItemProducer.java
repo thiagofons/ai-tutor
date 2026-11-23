@@ -1,6 +1,6 @@
 package com.carlosribeiro.gateway.producer;
 
-import com.carlosribeiro.gateway.dto.QueueMessageDTO;
+import com.carlosribeiro.gateway.domain.dto.QueueRequestMessageDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -13,18 +13,21 @@ public class ItemProducer {
     private static final Logger log = LoggerFactory.getLogger(ItemProducer.class);
 
     private final RabbitTemplate rabbitTemplate;
-    private final String inputQueue;
+    private final String inputExchange;
+    private final String inputRoutingKey;
 
     public ItemProducer(
             RabbitTemplate rabbitTemplate,
-            @Value("${app.rabbitmq.queues.input}") String inputQueue) {
+            @Value("${app.rabbitmq.exchanges.input}") String inputExchange,
+            @Value("${app.rabbitmq.routing-keys.input}") String inputRoutingKey) {
         this.rabbitTemplate = rabbitTemplate;
-        this.inputQueue = inputQueue;
+        this.inputExchange = inputExchange;
+        this.inputRoutingKey = inputRoutingKey;
     }
 
-    public void send(QueueMessageDTO message) {
-        log.info("Publishing jobId={} on queue={}", message.jobId(), inputQueue);
+    public void send(QueueRequestMessageDTO request) {
+        log.info("Publish query with jobId={} in exchange={}", request.jobId(), inputExchange);
 
-        rabbitTemplate.convertAndSend("", inputQueue, message);
+        rabbitTemplate.convertAndSend(inputExchange, inputRoutingKey, request);
     }
 }

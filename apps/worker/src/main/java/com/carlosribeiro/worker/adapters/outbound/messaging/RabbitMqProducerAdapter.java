@@ -1,6 +1,6 @@
 package com.carlosribeiro.worker.adapters.outbound.messaging;
 
-import com.carlosribeiro.worker.core.domain.dto.LLMResultDto;
+import com.carlosribeiro.worker.core.domain.dto.QueueWorkerResponseDTO;
 import com.carlosribeiro.worker.core.ports.outbound.QueueProducerPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +27,9 @@ public class RabbitMqProducerAdapter implements QueueProducerPort {
     }
 
     @Override
-    public void sendResult(LLMResultDto result) {
-        log.info("Publish result from AI for item {}", result.itemId());
+    public void send(QueueWorkerResponseDTO response) {
+        log.info("Publish result from AI for jobId={}", response.jobId());
 
-        rabbitTemplate.convertAndSend(outputExchange, outputRoutingKey, result);
+        rabbitTemplate.convertAndSend(outputExchange, outputRoutingKey, response);
     }
 }

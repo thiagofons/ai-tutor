@@ -1,6 +1,6 @@
 package com.carlosribeiro.gateway.consumer;
 
-import com.carlosribeiro.gateway.dto.WorkerResponseDTO;
+import com.carlosribeiro.gateway.domain.dto.QueueWorkerResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -19,7 +19,7 @@ public class ItemResponseConsumer {
     }
 
     @RabbitListener(queues = "${app.rabbitmq.queues.output}")
-    public void receive(WorkerResponseDTO response) {
+    public void receive(QueueWorkerResponseDTO response) {
         if (response == null || response.jobId() == null) {
             log.warn("Received message with invalid jobId: {}", response);
             return;

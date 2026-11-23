@@ -1,11 +1,15 @@
 package com.carlosribeiro.worker.core.usecases;
 
-import com.carlosribeiro.worker.core.domain.dto.InputQueryDto;
+import com.carlosribeiro.worker.core.domain.LLMResult;
+import com.carlosribeiro.worker.core.domain.dto.QueueRequestMessageDTO;
+import com.carlosribeiro.worker.core.domain.dto.QueueWorkerResponseDTO;
 import com.carlosribeiro.worker.core.ports.outbound.LLMClientPort;
 import com.carlosribeiro.worker.core.ports.outbound.QueueProducerPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class ProcessQueryUsingLLMUseCase {
@@ -19,8 +23,15 @@ public class ProcessQueryUsingLLMUseCase {
         this.queueProducerPort = queueProducerPort;
     }
 
-    public void execute(InputQueryDto input) {
+    public void execute(QueueRequestMessageDTO input) {
         // TODO: Implement use case execution
-        log.info("Item processed!");
+
+        String jobId = UUID.randomUUID().toString();
+        String status = "Ok";
+        LLMResult result = new LLMResult();
+
+        QueueWorkerResponseDTO response = new QueueWorkerResponseDTO(jobId, status, result);
+
+        queueProducerPort.send(response);
     }
 }

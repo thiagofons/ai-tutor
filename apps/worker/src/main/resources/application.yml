@@ -29,7 +29,10 @@ app:
     queues:
       input: ai.itens.input
       dlq: ai.itens.input.dlq
+      output: ai.itens.output
     exchanges:
+      input: ai.input.exchange
       output: ai.output.exchange
     routing-keys:
+      input: ai.input.created
       output: ai.output.processed

@@ -1,8 +1,8 @@
 package com.carlosribeiro.gateway.controller;
 
-import com.carlosribeiro.gateway.dto.ItemRequestDTO;
-import com.carlosribeiro.gateway.dto.JobCreatedResponseDTO;
-import com.carlosribeiro.gateway.dto.QueueMessageDTO;
+import com.carlosribeiro.gateway.domain.dto.UserQueryRequestDTO;
+import com.carlosribeiro.gateway.domain.dto.JobCreatedResponseDTO;
+import com.carlosribeiro.gateway.domain.dto.QueueRequestMessageDTO;
 import com.carlosribeiro.gateway.producer.ItemProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +27,13 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<JobCreatedResponseDTO> queryItem(@RequestBody ItemRequestDTO query) {
+    public ResponseEntity<JobCreatedResponseDTO> queryItem(@RequestBody UserQueryRequestDTO query) {
         String jobId = UUID.randomUUID().toString();
         String topic = "/topic/itens/" + jobId;
 
         log.info("New request received. Generated jobId={}", jobId);
 
-        QueueMessageDTO message = new QueueMessageDTO(jobId, query);
+        QueueRequestMessageDTO message = new QueueRequestMessageDTO(jobId, query);
         itemProducer.send(message);
 
         return ResponseEntity

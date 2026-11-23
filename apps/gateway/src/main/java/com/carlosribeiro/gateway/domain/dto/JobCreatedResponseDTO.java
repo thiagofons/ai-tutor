@@ -1,4 +1,4 @@
-package com.carlosribeiro.gateway.dto;
+package com.carlosribeiro.gateway.domain.dto;
 
 public record JobCreatedResponseDTO (
    String jobId,

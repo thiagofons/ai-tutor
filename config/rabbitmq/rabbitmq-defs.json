@@ -23,6 +23,15 @@
   ],
   "exchanges": [
     {
+      "name": "ai.input.exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
       "name": "ai.output.exchange",
       "vhost": "/",
       "type": "direct",
@@ -59,6 +68,14 @@
     }
   ],
   "bindings": [
+    {
+      "source": "ai.input.exchange",
+      "vhost": "/",
+      "destination": "ai.itens.input",
+      "destination_type": "queue",
+      "routing_key": "ai.input.created",
+      "arguments": {}
+    },
     {
       "source": "ai.output.exchange",
       "vhost": "/",
