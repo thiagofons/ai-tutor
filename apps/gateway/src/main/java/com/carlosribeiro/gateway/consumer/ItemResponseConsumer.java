@@ -1,10 +1,10 @@
 package com.carlosribeiro.gateway.consumer;
 
 import com.carlosribeiro.gateway.domain.dto.QueueWorkerResponseDTO;
+import com.carlosribeiro.gateway.sse.SseEmitterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,23 +12,19 @@ public class ItemResponseConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(ItemResponseConsumer.class);
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final SseEmitterRegistry sseRegistry;
 
-    public ItemResponseConsumer(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    public ItemResponseConsumer(SseEmitterRegistry sseRegistry) {
+        this.sseRegistry = sseRegistry;
     }
 
     @RabbitListener(queues = "${app.rabbitmq.queues.output}")
     public void receive(QueueWorkerResponseDTO response) {
-        if (response == null || response.jobId() == null) {
-            log.warn("Received message with invalid jobId: {}", response);
-            return;
+        log.info("Payload bruto recebido na fila output: {}", response);
+
+        if (response != null && response.jobId() != null) {
+            log.info("Response received for jobId={} response={}", response.jobId(), response.result());
+            sseRegistry.sendAndComplete(response.jobId(), response);
         }
-
-        String to = "/topic/itens/" + response.jobId();
-        log.info("Received result from worker with jobId={} (status={}) Sending to {}",
-                response.jobId(), response.status(), to);
-
-        messagingTemplate.convertAndSend(to, response);
     }
 }
