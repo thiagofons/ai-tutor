@@ -43,24 +43,24 @@
   ],
   "queues": [
     {
-      "name": "ai.itens.input",
+      "name": "ai.items.input",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
       "arguments": {
         "x-dead-letter-exchange": "",
-        "x-dead-letter-routing-key": "ai.itens.input.dlq"
+        "x-dead-letter-routing-key": "ai.items.input.dlq"
       }
     },
     {
-      "name": "ai.itens.input.dlq",
+      "name": "ai.items.input.dlq",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
       "arguments": {}
     },
     {
-      "name": "ai.itens.output",
+      "name": "ai.items.output",
       "vhost": "/",
       "durable": true,
       "auto_delete": false,
@@ -71,7 +71,7 @@
     {
       "source": "ai.input.exchange",
       "vhost": "/",
-      "destination": "ai.itens.input",
+      "destination": "ai.items.input",
       "destination_type": "queue",
       "routing_key": "ai.input.created",
       "arguments": {}
@@ -79,7 +79,7 @@
     {
       "source": "ai.output.exchange",
       "vhost": "/",
-      "destination": "ai.itens.output",
+      "destination": "ai.items.output",
       "destination_type": "queue",
       "routing_key": "ai.output.processed",
       "arguments": {}

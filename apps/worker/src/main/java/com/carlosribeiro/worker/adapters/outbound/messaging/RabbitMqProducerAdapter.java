@@ -2,15 +2,14 @@ package com.carlosribeiro.worker.adapters.outbound.messaging;
 
 import com.carlosribeiro.worker.core.domain.dto.QueueWorkerResponseDTO;
 import com.carlosribeiro.worker.core.ports.outbound.QueueProducerPort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class RabbitMqProducerAdapter implements QueueProducerPort {
-    private static final Logger log = LoggerFactory.getLogger(RabbitMqProducerAdapter.class);
 
     private final RabbitTemplate rabbitTemplate;
     private final String outputExchange;
@@ -19,7 +18,7 @@ public class RabbitMqProducerAdapter implements QueueProducerPort {
     public RabbitMqProducerAdapter(
             RabbitTemplate rabbitTemplate,
             @Value("${app.rabbitmq.exchanges.output}") String outputExchange,
-            @Value("${app.rabbitmq.routing-keys.output") String outputRoutingKey
+            @Value("${app.rabbitmq.routing-keys.output}") String outputRoutingKey
     ) {
         this.rabbitTemplate = rabbitTemplate;
         this.outputExchange = outputExchange;

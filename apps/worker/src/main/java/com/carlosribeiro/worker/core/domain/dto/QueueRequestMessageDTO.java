@@ -4,6 +4,6 @@ import java.time.Instant;
 
 public record QueueRequestMessageDTO(
         String jobId,
-        UserQueryRequestDTO content,
+        UserQueryRequestDTO payload,
         Instant timestamp
 ) { }

@@ -3,6 +3,7 @@ package com.carlosribeiro.gateway.config;
 import com.carlosribeiro.gateway.filter.JwtAuthenticationFilter;
 import com.carlosribeiro.gateway.service.UserDetailsService;
 import com.carlosribeiro.gateway.service.UserService;
+import jakarta.servlet.DispatcherType;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,10 +57,8 @@ public class SecurityConfig {
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
 
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/items").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.ERROR).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/users").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",

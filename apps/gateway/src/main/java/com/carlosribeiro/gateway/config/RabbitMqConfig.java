@@ -29,11 +29,22 @@ public class RabbitMqConfig {
     @Value("${app.rabbitmq.queues.output}")
     private String outputQueue;
 
+    @Value("${app.rabbitmq.exchanges.input}")
+    private String inputExchange;
+
     @Value("${app.rabbitmq.exchanges.output}")
     private String outputExchange;
 
+    @Value("${app.rabbitmq.routing-keys.input}")
+    private String inputRoutingKey;
+
     @Value("${app.rabbitmq.routing-keys.output}")
     private String outputRoutingKey;
+
+    @Bean
+    public DirectExchange inputExchange() {
+        return new DirectExchange(inputExchange);
+    }
 
     @Bean
     public Queue inputQueue() {
@@ -41,6 +52,18 @@ public class RabbitMqConfig {
                 .withArgument("x-dead-letter-exchange", "")
                 .withArgument("x-dead-letter-routing-key", dlqQueue)
                 .build();
+    }
+
+    @Bean
+    public Queue dlqQueue() {
+        return QueueBuilder.durable(dlqQueue).build();
+    }
+
+    @Bean
+    public Binding inputBinding(Queue inputQueue, DirectExchange inputExchange) {
+        return BindingBuilder.bind(inputQueue)
+                .to(inputExchange)
+                .with(inputRoutingKey);
     }
 
     @Bean
@@ -79,11 +102,9 @@ public class RabbitMqConfig {
             ConnectionFactory connectionFactory,
             MessageConverter jsonMessageConverter) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(jsonMessageConverter);
         factory.setDefaultRequeueRejected(false);
-
         return factory;
     }
 }

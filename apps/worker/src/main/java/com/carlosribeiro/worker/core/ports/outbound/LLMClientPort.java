@@ -4,5 +4,5 @@ import com.carlosribeiro.worker.core.domain.LLMResult;
 import com.carlosribeiro.worker.core.domain.dto.QueueRequestMessageDTO;
 
 public interface LLMClientPort {
-    LLMResult analyze(QueueRequestMessageDTO query);
+    LLMResult generate(QueueRequestMessageDTO query);
 }

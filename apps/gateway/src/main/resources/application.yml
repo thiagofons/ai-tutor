@@ -1,13 +1,16 @@
 spring:
+  application:
+    name: gateway
+
   threads:
     virtual:
       enabled: true
 
   rabbitmq:
-    host: localhost
+    host: rabbitmq
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: admin
     listener:
       simple:
         prefetch: 1
@@ -19,6 +22,17 @@ spring:
           multiplier: 2.0
           max-attempts: 3
 
+  datasource:
+    url: jdbc:postgresql://postgres:5432/gateway-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 app:
   gateway:
     security:
@@ -28,9 +42,9 @@ app:
 
   rabbitmq:
     queues:
-      input: ai.itens.input
-      dlq: ai.itens.input.dlq
-      output: ai.itens.output
+      input: ai.items.input
+      dlq: ai.items.input.dlq
+      output: ai.items.output
     exchanges:
       input: ai.input.exchange
       output: ai.output.exchange

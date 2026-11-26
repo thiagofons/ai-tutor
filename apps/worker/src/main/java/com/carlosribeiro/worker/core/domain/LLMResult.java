@@ -1,5 +1,7 @@
 package com.carlosribeiro.worker.core.domain;
 
-public class LLMResult {
+import lombok.AllArgsConstructor;
 
-}
+public record LLMResult (
+        String answer
+) {}

@@ -1,4 +1,6 @@
 package com.carlosribeiro.gateway.domain.model;
 
-public class LLMResult {
-}
+public record LLMResult (
+        String answer
+)
+{}

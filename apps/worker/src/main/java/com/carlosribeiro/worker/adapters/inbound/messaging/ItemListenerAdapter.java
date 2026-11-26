@@ -2,16 +2,14 @@ package com.carlosribeiro.worker.adapters.inbound.messaging;
 
 import com.carlosribeiro.worker.core.domain.dto.QueueRequestMessageDTO;
 import com.carlosribeiro.worker.core.usecases.ProcessQueryUsingLLMUseCase;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class ItemListenerAdapter {
-    private static final Logger log = LoggerFactory.getLogger(ItemListenerAdapter.class);
 
     private final ProcessQueryUsingLLMUseCase useCase;
 
@@ -23,11 +21,11 @@ public class ItemListenerAdapter {
     public void receive(QueueRequestMessageDTO payload) {
         try {
             log.info("Received item with jobId={} for AI processing", payload.jobId());
-            QueueRequestMessageDTO input = new QueueRequestMessageDTO(payload.jobId(), payload.content(), payload.timestamp());
 
-            useCase.execute(input);
+            useCase.execute(payload);
         } catch (IllegalArgumentException e) {
-            log.error("Discarded invalid content: {}", e.getMessage());
+            log.error("Discarded invalid payload: {}", e.getMessage());
+
             throw new AmqpRejectAndDontRequeueException(e);
         }
     }
