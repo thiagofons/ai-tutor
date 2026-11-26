@@ -5,8 +5,7 @@ import com.carlosribeiro.gateway.domain.dto.JobCreatedResponseDTO;
 import com.carlosribeiro.gateway.domain.dto.QueueRequestMessageDTO;
 import com.carlosribeiro.gateway.producer.ItemProducer;
 import com.carlosribeiro.gateway.sse.SseEmitterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +13,10 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.UUID;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/itens")
+@RequestMapping("/items")
 public class ItemController {
-
-    private static final Logger log = LoggerFactory.getLogger(ItemController.class);
 
     private final ItemProducer itemProducer;
     private final SseEmitterRegistry sseRegistry;
@@ -31,7 +29,7 @@ public class ItemController {
     @PostMapping
     public ResponseEntity<JobCreatedResponseDTO> queryItem(@RequestBody UserQueryRequestDTO query) {
         String jobId = UUID.randomUUID().toString();
-        String streamUrl = "/api/itens/" + jobId + "/stream";
+        String streamUrl = "/items/" + jobId + "/stream";
 
         log.info("New request received. Generated jobId={} and streamUrl={}", jobId, streamUrl);
 

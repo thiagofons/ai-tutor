@@ -19,12 +19,13 @@ spring:
           multiplier: 2.0
           max-attempts: 3
 
-  ai:
-    openai:
-      llm:
-        api-key: ${OPENAI_API_KEY}
-
 app:
+  gateway:
+    security:
+      token:
+        secret: ${AUTHENTICATION_SECRET_KEY}
+        expiration: ${AUTHENTICATION_SECRET_EXPIRATION}
+
   rabbitmq:
     queues:
       input: ai.itens.input

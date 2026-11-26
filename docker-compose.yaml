@@ -4,7 +4,13 @@ services:
     build:
       context: ./apps/gateway
       dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - AUTHENTICATION_SECRET_KEY=${AUTHENTICATION_SECRET_KEY}
+      - AUTHENTICATION_SECRET_EXPIRATION=${AUTHENTICATION_SECRET_EXPIRATION}
     depends_on:
+      - postgres
       - rabbitmq
     ports:
       - "4000:8080"
@@ -16,6 +22,8 @@ services:
     build:
       context: ./apps/worker
       dockerfile: Dockerfile
+    env_file:
+      - .env
     depends_on:
       - rabbitmq
     networks:
@@ -45,7 +53,26 @@ services:
       - type: bind
         source: ./config/rabbitmq/rabbitmq-defs.json
         target: /etc/rabbitmq/rabbitmq-defs.json
-      
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: gateway-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: gateway-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gateway-db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5    
 
 configs:
   rabbitmq-plugins:
@@ -59,4 +86,6 @@ volumes:
   rabbitmq-lib:
     driver: local
   rabbitmq-log:
+    driver: local
+  postgres-data:
     driver: local
